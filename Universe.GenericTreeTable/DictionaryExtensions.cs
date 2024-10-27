@@ -1,14 +1,8 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace Universe.GenericTreeTable
 {
-	// TODO: Store ToText() outside of TTreeKeyPart, similar to 
-	public interface ITextable
-	{
-		string ToText();
-	}
-
 	internal static class DictionaryExtensions
 	{
 		public static V GetOrAdd<K, V>(this IDictionary<K, V> dictionary, K key, Func<K, V> getNewValue)
@@ -22,5 +16,4 @@ namespace Universe.GenericTreeTable
 		}
 
 	}
-
 }

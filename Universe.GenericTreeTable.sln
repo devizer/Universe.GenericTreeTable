@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35326.205
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Universe.GenericTreeTable", "Universe.GenericTreeTable\Universe.GenericTreeTable.csproj", "{3DCB8A62-7114-483C-98A8-7F929CC2639A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Universe.GenericTreeTable", "Universe.GenericTreeTable\Universe.GenericTreeTable.csproj", "{3DCB8A62-7114-483C-98A8-7F929CC2639A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Universe.GenericTreeTable.Tests", "Universe.GenericTreeTable.Tests\Universe.GenericTreeTable.Tests.csproj", "{CEC46AF6-6226-4111-B42F-002AA845CA9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3DCB8A62-7114-483C-98A8-7F929CC2639A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DCB8A62-7114-483C-98A8-7F929CC2639A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DCB8A62-7114-483C-98A8-7F929CC2639A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC46AF6-6226-4111-B42F-002AA845CA9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC46AF6-6226-4111-B42F-002AA845CA9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC46AF6-6226-4111-B42F-002AA845CA9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC46AF6-6226-4111-B42F-002AA845CA9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
