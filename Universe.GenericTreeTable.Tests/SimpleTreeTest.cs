@@ -6,7 +6,6 @@ namespace Universe.GenericTreeTable.Tests
 {
 	public class SimpleTreeTest
 	{
-
 		[Test]
 		public void TestUnique()
 		{

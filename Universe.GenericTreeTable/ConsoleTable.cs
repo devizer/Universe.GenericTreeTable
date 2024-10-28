@@ -24,15 +24,17 @@ namespace Universe.GenericTreeTable
         {
             var row = new List<string>();
             foreach (var v in values)
-                if (v is double?)
-                {
-                    var d = (double?) v;
-                    row.Add(!d.HasValue ? "-" : d.Value.ToString("f2"));
-                }
-                else
-                {
-                    row.Add(Convert.ToString(v));
-                }
+            {
+	            if (v is double?)
+	            {
+		            var d = (double?)v;
+		            row.Add(!d.HasValue ? "-" : d.Value.ToString("f2"));
+	            }
+	            else
+	            {
+		            row.Add(Convert.ToString(v));
+	            }
+            }
 
             content.Add(row);
         }
