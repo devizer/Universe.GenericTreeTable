@@ -25,7 +25,7 @@ namespace Universe.GenericTreeTable.Tests
 
 		public void WriteColumns(ConsoleTable table, string renderedKey, TestNodeData info)
 		{
-			table.AddRow(renderedKey, info.Status, info.Date?.ToString("yyyy MM dd HH:mm:ss"), info.Amount);
+			table.AddRow(renderedKey, info.Status, info.Date?.ToString("yyyy MM dd HH:mm:ss"), info.Revenue);
 		}
 	}
 }

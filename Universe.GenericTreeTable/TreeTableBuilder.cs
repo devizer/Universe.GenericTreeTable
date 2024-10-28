@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Universe.GenericTreeTable
@@ -14,11 +15,52 @@ namespace Universe.GenericTreeTable
 			Configuration = configuration;
 		}
 
-		public ConsoleTable Build(IEnumerable<KeyValuePair<TTreeKeyPart, TData>> plainNodes)
+		public ConsoleTable Build(IEnumerable<KeyValuePair<IEnumerable<TTreeKeyPart>, TData>> plainNodes)
 		{
-			throw new NotImplementedException();
-		}
+			KeyValuePair<TreeKey<TTreeKeyPart>, TData>[] plainWithTreeKey = plainNodes
+				.Select(x => new KeyValuePair<TreeKey<TTreeKeyPart>, TData>(new TreeKey<TTreeKeyPart>(x.Key), x.Value))
+				.ToArray();
 
+			var reportCopyRaw = plainWithTreeKey;
+			reportCopyRaw = reportCopyRaw.OrderBy(x => x.Key.ToString()).ToArray();
+			var reportCopy = reportCopyRaw.ToDictionary(x => x.Key, x => x.Value);
+
+			List<Node<TreeKey<TTreeKeyPart>>> rootKeys = AsTree(reportCopyRaw.Select(x => x.Key));
+			List<KeyValuePair<TreeKey<TTreeKeyPart>, string>> orderedKeys = new List<KeyValuePair<TreeKey<TTreeKeyPart>, string>>();
+
+			void Enum1(List<Node<TreeKey<TTreeKeyPart>>> nodes)
+			{
+				foreach (var node in nodes)
+				{
+					orderedKeys.Add(new KeyValuePair<TreeKey<TTreeKeyPart>, string>(node.State, node.AscII));
+					Enum1(node.Children);
+				}
+			}
+			AscIITreeDiagram<TreeKey<TTreeKeyPart>>.PopulateAscII(rootKeys);
+			Enum1(rootKeys);
+
+			var letsDebug = "ok";
+
+
+			ConsoleTable ct = this.Configuration.CreateColumns();
+			StringBuilder debugTree = new StringBuilder();
+			foreach (var pair in orderedKeys)
+			{
+				TreeKey<TTreeKeyPart> path = pair.Key;
+				string pathAsString = pair.Value;
+				// var total = reportCopyRaw.FirstOrDefault(x => x.Key.Equals(path)).Value ?? zeroMetrics;
+				debugTree.AppendLine($"{path,-125} {pathAsString}");
+				reportCopy.TryGetValue(path, out TData total);
+				var detail = total;
+				if (total == null) ct.AddRow(pathAsString);
+				else
+				{
+					this.Configuration.WriteColumns(ct, pathAsString, total);
+				}
+			}
+
+			return ct;
+		}
 		class TempTree : Dictionary<TreeKey<TTreeKeyPart>, TempTree>
 		{
 			// null for sub tree
