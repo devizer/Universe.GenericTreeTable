@@ -28,7 +28,7 @@ namespace Universe.GenericTreeTable
 	            if (v is double?)
 	            {
 		            var d = (double?)v;
-		            row.Add(!d.HasValue ? "-" : d.Value.ToString("f2"));
+		            row.Add(!d.HasValue ? "-" : d.Value.ToString("n2"));
 	            }
 	            else
 	            {

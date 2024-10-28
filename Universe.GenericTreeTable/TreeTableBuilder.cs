@@ -72,6 +72,7 @@ namespace Universe.GenericTreeTable
 		}
 
 		// public for tests only
+		// return tree without duplicates
 		public List<Node<TreeKey<TTreeKeyPart>>> AsTree(IEnumerable<TreeKey<TTreeKeyPart>> plainList)
 		{
 			TreeKeyEqualityComparer<TTreeKeyPart> treeKeyEqualityComparer = new TreeKeyEqualityComparer<TTreeKeyPart>(this.Configuration.EqualityComparer);
