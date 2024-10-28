@@ -10,11 +10,8 @@ namespace Universe.GenericTreeTable.Tests
 	{
 		public static readonly TestTreeConfiguration Instance = new TestTreeConfiguration();
 
-		public IEqualityComparer<string> EqualityComparer { get; }
-		public string KeyPartToText(string keyPart)
-		{
-			return keyPart;
-		}
+		public IEqualityComparer<string> EqualityComparer { get; } = EqualityComparer<string>.Default;
+		public string KeyPartToText(string keyPart) => keyPart;
 
 		public string Separator => " \x2192 ";
 

@@ -23,7 +23,8 @@ namespace Universe.GenericTreeTable
 
 			var reportCopyRaw = plainWithTreeKey;
 			reportCopyRaw = reportCopyRaw.OrderBy(x => x.Key.ToString()).ToArray();
-			var reportCopy = reportCopyRaw.ToDictionary(x => x.Key, x => x.Value);
+			TreeKeyEqualityComparer<TTreeKeyPart> treeKeyEqualityComparer = new TreeKeyEqualityComparer<TTreeKeyPart>(this.Configuration.EqualityComparer);
+			var reportCopy = reportCopyRaw.ToDictionary(x => x.Key, x => x.Value, treeKeyEqualityComparer);
 
 			List<Node<TreeKey<TTreeKeyPart>>> rootKeys = AsTree(reportCopyRaw.Select(x => x.Key));
 			List<KeyValuePair<TreeKey<TTreeKeyPart>, string>> orderedKeys = new List<KeyValuePair<TreeKey<TTreeKeyPart>, string>>();
@@ -63,21 +64,25 @@ namespace Universe.GenericTreeTable
 		}
 		class TempTree : Dictionary<TreeKey<TTreeKeyPart>, TempTree>
 		{
+			public TempTree(IEqualityComparer<TreeKey<TTreeKeyPart>> comparer) : base(comparer)
+			{
+			}
 			// null for sub tree
-			public TTreeKeyPart Leaf;
+			// public TTreeKeyPart Leaf;
 		}
 
 		// public for tests only
 		public List<Node<TreeKey<TTreeKeyPart>>> AsTree(IEnumerable<TreeKey<TTreeKeyPart>> plainList)
 		{
-			TempTree root = new TempTree();
+			TreeKeyEqualityComparer<TTreeKeyPart> treeKeyEqualityComparer = new TreeKeyEqualityComparer<TTreeKeyPart>(this.Configuration.EqualityComparer);
+			TempTree root = new TempTree(treeKeyEqualityComparer);
 			foreach (var plainItem in plainList)
 			{
 				var parent = root;
 				for (int i = 0, l = plainItem.Path.Length; i < l; i++)
 				{
 					TreeKey<TTreeKeyPart> partial = new TreeKey<TTreeKeyPart>(plainItem.Path.Take(i + 1).ToArray());
-					TempTree current = parent.GetOrAdd(partial, key => new TempTree());
+					TempTree current = parent.GetOrAdd(partial, key => new TempTree(treeKeyEqualityComparer));
 					parent = current;
 				}
 			}
