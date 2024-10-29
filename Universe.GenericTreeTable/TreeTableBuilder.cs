@@ -24,7 +24,9 @@ namespace Universe.GenericTreeTable
 			var reportCopyRaw = plainWithTreeKey;
 			reportCopyRaw = reportCopyRaw.OrderBy(x => x.Key.ToString()).ToArray();
 			TreeKeyEqualityComparer<TTreeKeyPart> treeKeyEqualityComparer = new TreeKeyEqualityComparer<TTreeKeyPart>(this.Configuration.EqualityComparer);
-			var reportCopy = reportCopyRaw.ToDictionary(x => x.Key, x => x.Value, treeKeyEqualityComparer);
+			// var reportCopy = reportCopyRaw.ToDictionary(x => x.Key, x => x.Value, treeKeyEqualityComparer);
+			var reportCopy = reportCopyRaw.ToLookup(x => x.Key, x => x.Value, treeKeyEqualityComparer);
+
 
 			List<Node<TreeKey<TTreeKeyPart>>> rootKeys = AsTree(reportCopyRaw.Select(x => x.Key));
 			List<KeyValuePair<TreeKey<TTreeKeyPart>, string>> orderedKeys = new List<KeyValuePair<TreeKey<TTreeKeyPart>, string>>();
@@ -51,12 +53,15 @@ namespace Universe.GenericTreeTable
 				string pathAsString = pair.Value;
 				// var total = reportCopyRaw.FirstOrDefault(x => x.Key.Equals(path)).Value ?? zeroMetrics;
 				debugTree.AppendLine($"{path,-125} {pathAsString}");
-				reportCopy.TryGetValue(path, out TData total);
-				var detail = total;
-				if (total == null) ct.AddRow(pathAsString);
+				var details = reportCopy[path].ToArray();
+				if (details.Length == 0)
+					ct.AddRow(pathAsString);
 				else
 				{
-					this.Configuration.WriteColumns(ct, pathAsString, total);
+					foreach (var detail in details)
+					{
+						this.Configuration.WriteColumns(ct, pathAsString, detail);
+					}
 				}
 			}
 

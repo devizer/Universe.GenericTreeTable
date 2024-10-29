@@ -1,0 +1,1 @@
+cmd /c pwsh -f Push-Nuget.ps1

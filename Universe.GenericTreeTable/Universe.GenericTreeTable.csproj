@@ -24,9 +24,7 @@
         <PackageProjectUrl>https://github.com/devizer/Universe.GenericTreeTable</PackageProjectUrl>
         <RepositoryUrl>https://github.com/devizer/Universe.GenericTreeTable</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <!--
 	    <PackageIconUrl>https://github.com/devizer/Universe.GenericTreeTable/master/Icon/......</PackageIconUrl>
-		-->
         <PackageTags>Tree data structure</PackageTags>
     </PropertyGroup>
 
