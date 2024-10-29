@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard1.3;net35;net40;net45;net461;net20</TargetFrameworks>
+        <PackageIcon>Icon\Tree.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net35' Or '$(TargetFramework)' == 'net30' Or '$(TargetFramework)' == 'net20' ">
@@ -13,6 +14,7 @@
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	    <PrivateAssets>all</PrivateAssets>
 	  </PackageReference>
+	  <None Include="Icon\Tree.png" Pack="true" PackagePath="Icon" />
 	</ItemGroup>
 
     <PropertyGroup>
@@ -24,7 +26,7 @@
         <PackageProjectUrl>https://github.com/devizer/Universe.GenericTreeTable</PackageProjectUrl>
         <RepositoryUrl>https://github.com/devizer/Universe.GenericTreeTable</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	    <PackageIconUrl>https://github.com/devizer/Universe.GenericTreeTable/master/Icon/......</PackageIconUrl>
+	    <PackageIconUrl>https://raw.githubusercontent.com/devizer/Universe.GenericTreeTable/main/Universe.GenericTreeTable/Icon/Tree.png</PackageIconUrl>
         <PackageTags>Tree data structure</PackageTags>
     </PropertyGroup>
 
