@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\Shared-Files\Net-2x-4x-Support.proj" />
+
   <PropertyGroup>
     <TargetFrameworks>net6.0;net48;net35</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
