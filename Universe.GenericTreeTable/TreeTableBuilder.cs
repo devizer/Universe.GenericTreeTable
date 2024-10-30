@@ -15,6 +15,29 @@ namespace Universe.GenericTreeTable
 			Configuration = configuration;
 		}
 
+		public ConsoleTable BuildPlain(IEnumerable<KeyValuePair<IEnumerable<TTreeKeyPart>, TData>> plainNodes)
+		{
+			KeyValuePair<TreeKey<TTreeKeyPart>, TData>[] plainWithTreeKey = plainNodes
+				.Select(x => new KeyValuePair<TreeKey<TTreeKeyPart>, TData>(new TreeKey<TTreeKeyPart>(x.Key), x.Value))
+				.ToArray();
+
+			ConsoleTable ct = this.Configuration.CreateColumns();
+			foreach (var pair in plainWithTreeKey)
+			{
+				TreeKey<TTreeKeyPart> treeKey = pair.Key;
+				var data = pair.Value;
+				var keyRendered = string.Join(
+					this.Configuration.Separator,
+					treeKey.Path.Select(x => this.Configuration.KeyPartToText(x)).ToArray()
+				);
+
+				this.Configuration.WriteColumns(ct, keyRendered, data);
+			}
+
+			return ct;
+		}
+
+
 		public ConsoleTable Build(IEnumerable<KeyValuePair<IEnumerable<TTreeKeyPart>, TData>> plainNodes)
 		{
 			KeyValuePair<TreeKey<TTreeKeyPart>, TData>[] plainWithTreeKey = plainNodes
