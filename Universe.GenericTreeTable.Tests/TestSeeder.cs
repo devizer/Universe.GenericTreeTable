@@ -27,15 +27,20 @@ namespace Universe.GenericTreeTable.Tests
 		private static Random R = new Random(42);
 		static TestNodeData RandomData()
 		{
-			var statuses = new string[] { "AAA", "AA", "A", "B", "C", "D" };
 			return new TestNodeData()
 			{
 				Count = R.Next(500, 5000),
 				Date = new DateTime(2020, 1, 1).AddMinutes(R.Next(1, 5 * 365 * 24 * 60)),
 				Revenue = R.Next(1, 10000) * 100,
-				Status = statuses[R.Next(0, statuses.Length - 1)]
+				Status = GetRandomStatus()
 			};
 
+		}
+
+		public static string GetRandomStatus()
+		{
+			var statuses = new string[] { "AAA", "AA", "A", "B", "C", "D" };
+			return statuses[R.Next(0, statuses.Length - 1)];
 		}
 	}
 }
