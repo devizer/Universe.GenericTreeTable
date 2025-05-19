@@ -11,7 +11,9 @@ namespace Universe.GenericTreeTable
         private readonly List<string[]> header = new List<string[]>();
         private readonly List<bool> rightAlignment = new List<bool>();
 
-        public bool NeedUnicode = false;
+        public bool NeedUnicode { get; set; } = false;
+        public bool HideHeader { get; set; } = false;
+        public bool HideColumnBorders { get; set; } = false;
 
         public ConsoleTable(List<List<string>> multilineColumns) : this((IEnumerable<IEnumerable<string>>)multilineColumns)
         {
@@ -74,21 +76,25 @@ namespace Universe.GenericTreeTable
             // copy.Add(header.Select(x => Convert.ToString(x)).ToList());
 			// If Multiline header
 			var headerHeight = header.Count == 0 ? 0 : header.Select(x => x.Length).Max(); // rows in header
-			for (int headerRowIndex = 0; headerRowIndex < headerHeight; headerRowIndex++)
+			if (!HideHeader)
 			{
-				List<string> headerRow = new List<string>();
-				foreach (string[] strings in header)
+				for (int headerRowIndex = 0; headerRowIndex < headerHeight; headerRowIndex++)
 				{
-					var padTop = headerHeight - strings.Length;
-					var yIndex = headerRowIndex - padTop;
-					string headerCell = yIndex >= 0 && strings.Length > 0 && yIndex < strings.Length ? strings[yIndex] : "";
-					headerRow.Add(headerCell);
+					List<string> headerRow = new List<string>();
+					foreach (string[] strings in header)
+					{
+						var padTop = headerHeight - strings.Length;
+						var yIndex = headerRowIndex - padTop;
+						string headerCell = yIndex >= 0 && strings.Length > 0 && yIndex < strings.Length ? strings[yIndex] : "";
+						headerRow.Add(headerCell);
+					}
+
+					copy.Add(headerRow);
 				}
-				copy.Add(headerRow);
 			}
 
 
-            copy.AddRange(content);
+			copy.AddRange(content);
             var cols = copy.Count == 0 ? 0 : copy.Max(x => x.Count);
             var width = Enumerable.Repeat(1, cols).ToList();
             for (var y = 0; y < copy.Count; y++)
@@ -98,7 +104,10 @@ namespace Universe.GenericTreeTable
             }
 
             var sep = width.Select(x => new string(BoxHorizontal, x)).ToList();
-            copy.Insert(headerHeight, sep);
+            if (!HideHeader)
+            {
+	            copy.Insert(headerHeight, sep);
+            }
 
             var ret = new StringBuilder();
             for (var y = 0; y < copy.Count; y++)
@@ -106,12 +115,16 @@ namespace Universe.GenericTreeTable
                 var row = copy[y];
                 for (var x = 0; x < cols; x++)
                 {
-                    if (x > 0) ret.Append(y == headerHeight ? BoxCross : BoxVertical);
-                    var v = (x < row.Count ? row[x] : null) ?? "";
+	                if (!HideColumnBorders)
+	                {
+		                if (x > 0) ret.Append(y == headerHeight && !HideHeader ? BoxCross : BoxVertical);
+	                }
+
+	                var v = (x < row.Count ? row[x] : null) ?? "";
                     if (v.Length < width[x])
                     {
                         var pad = new string(' ', -v.Length + width[x]);
-                        if (rightAlignment[x] && y >= headerHeight)
+                        if (rightAlignment[x] && (y >= headerHeight || HideHeader))
                             v = pad + v;
                         else
                             v = v + pad;
