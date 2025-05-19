@@ -69,6 +69,8 @@ namespace Universe.GenericTreeTable
             content.Add(row);
         }
 
+        public int LineCount => this.content.Count;
+
         public override string ToString()
         {
             var copy = new List<List<string>>();
