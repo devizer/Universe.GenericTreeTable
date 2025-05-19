@@ -15,14 +15,20 @@ namespace Universe.GenericTreeTable
         public bool HideHeader { get; set; } = false;
         public bool HideColumnBorders { get; set; } = false;
 
+        protected ConsoleTable()
+        {
+	        _CellsAccessor = new CellsAccessor(this);
+        }
+
         public ConsoleTable(List<List<string>> multilineColumns) : this((IEnumerable<IEnumerable<string>>)multilineColumns)
         {
         }
+
         public ConsoleTable(List<string[]> multilineColumns) : this((IEnumerable<IEnumerable<string>>)multilineColumns)
         {
         }
 
-		public ConsoleTable(IEnumerable<IEnumerable<string>> multilineColumns)
+		public ConsoleTable(IEnumerable<IEnumerable<string>> multilineColumns) : this()
         {
 	        foreach (IEnumerable<string> column in multilineColumns)
 	        {
@@ -35,7 +41,7 @@ namespace Universe.GenericTreeTable
 			}
         }
 
-		public ConsoleTable(params string[] singlelineColumns)
+		public ConsoleTable(params string[] singlelineColumns) : this()
         {
             foreach (var column in singlelineColumns)
             {
@@ -49,27 +55,68 @@ namespace Universe.GenericTreeTable
         {
             var row = new List<string>();
             foreach (var v in values)
-            {
-	            if (v is double?)
-	            {
-		            var d = (double?)v;
-		            row.Add(!d.HasValue ? "-" : d.Value.ToString("n2"));
-	            }
-	            else if (v is int?)
-	            {
-		            var d = (int?)v;
-		            row.Add(!d.HasValue ? "-" : d.Value.ToString("n0"));
-	            }
-	            else
-				{
-		            row.Add(Convert.ToString(v));
-	            }
-            }
+				row.Add(PreProcessInputValue(v));
 
             content.Add(row);
         }
 
-        public int LineCount => this.content.Count;
+        private string PreProcessInputValue(object v)
+        {
+	        if (v is double?)
+	        {
+		        var d = (double?)v;
+		        return !d.HasValue ? "-" : d.Value.ToString("n2");
+	        }
+	        else if (v is int?)
+	        {
+		        var d = (int?)v;
+		        return !d.HasValue ? "-" : d.Value.ToString("n0");
+	        }
+	        else
+	        {
+		        return (Convert.ToString(v));
+	        }
+		}
+
+		public int LineCount => this.content.Count;
+        private CellsAccessor _CellsAccessor;
+        public CellsAccessor Cells => _CellsAccessor;
+
+		public class CellsAccessor
+        {
+	        private readonly ConsoleTable _owner;
+	        public CellsAccessor(ConsoleTable owner)
+	        {
+		        _owner = owner;
+	        }
+
+	        public object this[int row, int column]
+	        {
+		        // getter always return string
+		        get
+		        {
+			        if (row >= 0 && row < _owner.content.Count)
+			        {
+				        var line = _owner.content[row];
+						if (column >= 0 && column < line.Count)
+							return line[column];
+			        }
+
+			        return null;
+		        }
+		        set
+		        {
+			        if (row >= 0 && row < _owner.content.Count)
+			        {
+				        var line = _owner.content[row];
+						while(line.Count <= column) line.Add(null);
+						line[column] = _owner.PreProcessInputValue(value);
+			        }
+			        else
+				        throw new ArgumentException($"row argument is {row} should be in range 0 ... {_owner.content.Count - 1}");
+		        }
+	        }
+        }
 
         public override string ToString()
         {
